@@ -19,7 +19,7 @@ f = open(f'sequences/explosions.csv','a',encoding='utf-8')
 writer = csv.writer(f)
 
 # Open coordinates file
-with open('../coords_2021.csv','r',encoding='utf-8-sig') as f:
+with open('coords_2021.csv','r',encoding='utf-8-sig') as f:
     reader = csv.reader(f)
     next(reader)
     coords = [[float(x.strip()) for x in row] for row in list(reader)] # dense but oh well
