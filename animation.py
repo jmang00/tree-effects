@@ -1,6 +1,12 @@
 from vpython import *
 import csv
+import sys
 from time import sleep
+
+if len(sys.argv) == 2:
+    filename = f'sequences/{sys.argv[1]}.csv'
+else:
+    filename = 'sequences/explosions.csv'
 
 # Setup the canvas and the view
 # By the way, this library has terrible documentation
@@ -25,13 +31,12 @@ with open('coords_2021.csv','r',encoding='utf-8-sig') as f:
 # Open the animation file and process it
 animation = []
 # rotating-rainbow
-with open('sequences/moving-z-plane.csv','r',encoding='utf-8') as f:
+with open(filename,'r',encoding='utf-8') as f:
     reader = csv.reader(f)
     total_frames = 0
 
     next(reader) # skip the header
     for row in reader:
-        print(row[0])
         total_frames += 1
         colors = []
         for i in range(500):
