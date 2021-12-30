@@ -6,7 +6,7 @@ from time import sleep
 if len(sys.argv) == 2:
     filename = f'sequences/{sys.argv[1]}.csv'
 else:
-    filename = 'sequences/explosions.csv'
+    filename = 'sequences/moving-rotating-rainbow.csv'
 
 # Setup the canvas and the view
 # By the way, this library has terrible documentation
@@ -28,9 +28,11 @@ with open('coords_2021.csv','r',encoding='utf-8-sig') as f:
 
         lights.append(light)
 
+
 # Open the animation file and process it
+print('Loading animation...')
 animation = []
-# rotating-rainbow
+
 with open(filename,'r',encoding='utf-8') as f:
     reader = csv.reader(f)
     total_frames = 0

@@ -1,13 +1,29 @@
 import csv
 from random import choice
 import math
+import numpy as np
+from colour import Color
 from pprint import pprint
 
-def dist(A,B):
+
+def find_dist(A,B):
     # return the distance between two 3D coordinates
     xA,yA,zA = A
     xB,yB,zB = B
     return math.sqrt( (abs(xA-xB))**2 + (abs(yA-yB))**2 + (abs(zA-zB))**2 )
+
+def get_hsl_colour_range(A,B,n):
+    # A and B are the 2 colours
+    # n is the number of inbetween colours
+    A = np.array(A.hsl)
+    B = np.array(B.hsl)
+    diff = (B-A)/(n+1)
+
+
+    colours = [
+        Color( hsl=A+diff*(i+1) ) for i in range(n)
+        ]
+    return colours
 
 # Write header line
 f = open(f'sequences/explosions.csv','w',encoding='utf-8')
@@ -24,23 +40,47 @@ with open('coords_2021.csv','r',encoding='utf-8-sig') as f:
     next(reader)
     coords = [[float(x.strip()) for x in row] for row in list(reader)] # dense but oh well
 
+# Setup colours
+sets = [
+    ['#cf361f','#f7f55e'], #red and yellow
+    ['#04ff00','#13571a'], #light green and dark green
+    ['#05ecfc','#17179c'], #light blue and dark blue
+    ['#03a9f4','#4caf50'], #blue and green
+    ['#fc03c2','#7f13ad'], #pink and purple
+    ['#f50008','#583cd6'], #red-pink-purple-blue
+    ['#ff0000','#583cd6'] #red-orange-yellow-green-blue
+]
+sets = [[Color(x) for x in y] for y in sets]
+colour_ranges = [get_hsl_colour_range(colours[0],colours[1],200) for colours in sets]
 
-for explosion in range(20):
+
+max_radius = 2
+explosion_frames = 200
+no_explosions = len(colour_ranges)*5
+
+for explosion in range(no_explosions):
     epicentre = choice(coords)
     radius = 0
-    for frame in range(60):
+    colour_range = colour_ranges[explosion % len(colour_ranges)]
+
+    for frame in range(explosion_frames):
         line = [frame] + [0]*1500
 
         for i in range(len(coords)):
-            # print(dist(coords[i],epicentre))
-            if dist(coords[i],epicentre) < radius:
-                line[i*3+1] = 255 #r
+            dist = find_dist(coords[i],epicentre)
+
+            if dist < radius:
+                c = colour_range[int(dist/radius*len(colour_range))]
+                line[i*3+1] = int(c.red*255) #r 
+                line[i*3+2] = int(c.green*255) #g
+                line[i*3+3] = int(c.blue*255) #b
             else:
                 line[i*3+1] = 0 #r 
-            line[i*3+2] = 0 #g
-            line[i*3+3] = 0 #b
+                line[i*3+2] = 0 #g
+                line[i*3+3] = 0 #b
             
         writer.writerow(line)
-        radius += 3/60
-
+        radius += max_radius/explosion_frames
+    
+    print(f'{explosion+1}/{no_explosions}')
 f.close()
