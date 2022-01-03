@@ -2,7 +2,7 @@ import csv
 from random import choice
 import math
 import numpy as np
-from colour import Color
+from colour import hsl2rgb
 
 
 def find_dist(A,B):
@@ -58,10 +58,10 @@ for frame in range(int(1/speed)):
         hue = (base_hue + dist/band_width) % 1
         # print(hue)
 
-        c = Color(hsl=(hue,1,0.5))
-        line[i*3+1] = int(c.red*255) #r 
-        line[i*3+2] = int(c.green*255) #g
-        line[i*3+3] = int(c.blue*255) #b
+        c = hsl2rgb((hue,1,0.5))
+        line[i*3+1] = int(c[0]*255) #r
+        line[i*3+2] = int(c[1]*255) #g
+        line[i*3+3] = int(c[2]*255) #b
     
     writer.writerow(line)
 
