@@ -26,15 +26,15 @@ with open('coords_2021.csv','r',encoding='utf-8-sig') as f:
     reader = csv.reader(f)
     coords = [[float(x.strip()) for x in row] for row in list(reader)] # dense but oh well
 
+# Animation variables
+band_width = 6 #the width of the whole hue scale in GIFT coordinates
+speed = 0.002
+direction = 'out'
 
-# Setup variables
+# Setup
 coords = np.array(coords)
 center = coords.sum(axis=0)/500 # use the average position of the lights as the center
 base_hue = 0
-
-band_width = 6 #the width of the whole hue scale in GIFT coordinates
-speed = 0.005
-direction = 'out'
 
 # Stats
 # dists = [find_dist(coord,middle) for coord in coords]
@@ -47,8 +47,6 @@ for frame in range(int(1/speed)):
         base_hue += speed
     elif direction == 'out':
         base_hue -= speed
-
-    # Move the cen
 
     # Record the colour of each light
     line = [frame] + [0]*1500
@@ -64,8 +62,6 @@ for frame in range(int(1/speed)):
         line[i*3+3] = int(c[2]*255) #b
     
     writer.writerow(line)
-
-    
 
 
 f.close()
