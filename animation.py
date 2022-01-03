@@ -3,6 +3,8 @@ import csv
 import sys
 from time import sleep
 
+# Only need to pip install vpythpn
+
 if len(sys.argv) == 2:
     filename = f'sequences/{sys.argv[1]}.csv'
 else:
