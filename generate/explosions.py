@@ -11,18 +11,18 @@ def find_dist(A,B):
     xB,yB,zB = B
     return math.sqrt( (abs(xA-xB))**2 + (abs(yA-yB))**2 + (abs(zA-zB))**2 )
 
-def get_hsl_colour_range(A,B,n):
-    # A and B are the 2 colours
-    # n is the number of inbetween colours
+def get_hsl_color_range(A,B,n):
+    # A and B are the 2 colors
+    # n is the number of inbetween colors
     A = np.array(A.hsl)
     B = np.array(B.hsl)
     diff = (B-A)/(n+1)
 
 
-    colours = [
+    colors = [
         Color( hsl=A+diff*(i+1) ) for i in range(n)
         ]
-    return colours
+    return colors
 
 
 # Write header line
@@ -37,10 +37,9 @@ writer = csv.writer(f)
 # Open coordinates file
 with open('coords_2021.csv','r',encoding='utf-8-sig') as f:
     reader = csv.reader(f)
-    next(reader)
     coords = [[float(x.strip()) for x in row] for row in list(reader)] # dense but oh well
 
-# Setup colours
+# Setup colors
 sets = [
     ['#cf361f','#f7f55e'], #red and yellow
     ['#ff0000','#583cd6'], #red-orange-yellow-green-blue
@@ -51,18 +50,18 @@ sets = [
     
 ]
 sets = [[Color(x) for x in y] for y in sets]
-colour_ranges = [get_hsl_colour_range(colours[0],colours[1],200) for colours in sets]
+color_ranges = [get_hsl_color_range(colors[0],colors[1],200) for colors in sets]
 
 
 # Variables
 growth_speed = 0.015
-no_explosions = len(colour_ranges)*3
+no_explosions = len(color_ranges)*3
 
 frame = 0
 for explosion in range(no_explosions):
-    epicentre = choice(coords) # Choose a random point to start at
+    epicenter = choice(coords) # Choose a random point to start at
     radius = 0 # Start the sphere with 0 radius, which grows
-    colour_range = colour_ranges[explosion % len(colour_ranges)] # Cyle through colour sets
+    color_range = color_ranges[explosion % len(color_ranges)] # Cyle through color sets
 
     while True:
         all_on = True
@@ -70,10 +69,10 @@ for explosion in range(no_explosions):
         radius += growth_speed
         
         for i in range(len(coords)):
-            dist = find_dist(coords[i],epicentre)
+            dist = find_dist(coords[i],epicenter)
 
             if dist <= radius:
-                c = colour_range[int(dist/radius*len(colour_range))]
+                c = color_range[int(dist/radius*len(color_range))]
                 line[i*3+1] = int(c.red*255) #r 
                 line[i*3+2] = int(c.green*255) #g
                 line[i*3+3] = int(c.blue*255) #b

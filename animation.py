@@ -50,7 +50,9 @@ with open(filename,'r',encoding='utf-8') as f:
             colors.append(vector(r,g,b))
         animation.append(colors)
 
+
 # Loop the animation
+print('Playing animation...')
 while True:
     for frame in range(total_frames):
         for l in range(500):
